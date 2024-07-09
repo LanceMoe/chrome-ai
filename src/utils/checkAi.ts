@@ -20,6 +20,8 @@ export async function checkAi() {
     .createTextSession()
     .then((session) => {
       console.log('Successfully created session', session);
+      // NOTE: Release session after created
+      session.destroy();
     })
     .catch((e) => {
       console.error(e);

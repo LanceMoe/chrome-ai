@@ -24,11 +24,35 @@ function App() {
 
   const canUseAi = aiEngineStatus === 'readily';
 
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    if (!canUseAi) {
+      return;
+    }
+
+    (async () => {
+      if (!window.ai) {
+        return;
+      }
+      const session = await window.ai.createTextSession({
+        temperature: 0.8, // 0-1 (default: 0.8)
+        topK: 3, // 1-20 (default: 3)
+      });
+      const streamingResponse = await session.promptStreaming('请扮演脱口秀演员，讲一些冷笑话。');
+      for await (const chunk of streamingResponse) {
+        setText(chunk);
+      }
+      session.destroy();
+    })();
+  }, [canUseAi]);
+
   return (
     <>
       <h1 className="text-red-500">
         Can Use AI: {canUseAi ? 'Yes' : 'No'} ({aiEngineStatus})
       </h1>
+      <p>{text}</p>
     </>
   );
 }
