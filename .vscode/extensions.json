@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "steoates.autoimport",
+    "stylelint.vscode-stylelint",
+    "ms-playwright.playwright",
+    "ambar.bundle-size"
+  ]
+}
