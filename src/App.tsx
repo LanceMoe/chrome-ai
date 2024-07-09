@@ -1,18 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { checkAi } from '@/utils/checkAi';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [aiEngineStatus, setAiEngineStatus] = useState<AITextSessionStatus>('no');
+
+  useEffect(() => {
+    checkAi()
+      .then((status) => {
+        setAiEngineStatus(status);
+        if (status === 'no') {
+          console.error(
+            'Built-in AI is not supported, check your configuration in `chrome://flags/#optimization-guide-on-device-model` and `chrome://components/`',
+          );
+        } else if (status === 'after-download') {
+          console.error('Built-in AI model is not downloaded, check your configuration in `chrome://components/`');
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }, []);
+
+  const canUseAi = aiEngineStatus === 'readily';
 
   return (
     <>
-      <h1 className="text-red-500">Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+      <h1 className="text-red-500">
+        Can Use AI: {canUseAi ? 'Yes' : 'No'} ({aiEngineStatus})
+      </h1>
     </>
   );
 }
