@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-type ReadableStreamWithAsyncIterator = import('node:stream/web').ReadableStream;
+type ReadableStringStream = import('node:stream/web').ReadableStream<string>;
 
 type AITextSession = {
   destroy(): void;
   prompt(promptText: string): Promise<string>;
-  promptStreaming(promptText: string): Promise<ReadableStreamWithAsyncIterator<string>>;
+  promptStreaming(promptText: string): Promise<ReadableStringStream>;
 };
 
 type AITextSessionOptions = {
