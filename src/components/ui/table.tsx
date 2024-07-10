@@ -1,26 +1,26 @@
 import { forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-const Table = forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(({ className, ...props }, ref) => (
+const Table = forwardRef<HTMLTableElement, React.ComponentPropsWithoutRef<'table'>>(({ className, ...props }, ref) => (
   <div className="relative w-full overflow-auto">
     <table ref={ref} className={twMerge('w-full caption-bottom text-sm', className)} {...props} />
   </div>
 ));
 Table.displayName = 'Table';
 
-const TableHeader = forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+const TableHeader = forwardRef<HTMLTableSectionElement, React.ComponentPropsWithoutRef<'thead'>>(
   ({ className, ...props }, ref) => <thead ref={ref} className={twMerge('[&_tr]:border-b', className)} {...props} />,
 );
 TableHeader.displayName = 'TableHeader';
 
-const TableBody = forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+const TableBody = forwardRef<HTMLTableSectionElement, React.ComponentPropsWithoutRef<'tbody'>>(
   ({ className, ...props }, ref) => (
     <tbody ref={ref} className={twMerge('[&_tr:last-child]:border-0', className)} {...props} />
   ),
 );
 TableBody.displayName = 'TableBody';
 
-const TableFooter = forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+const TableFooter = forwardRef<HTMLTableSectionElement, React.ComponentPropsWithoutRef<'tfoot'>>(
   ({ className, ...props }, ref) => (
     <tfoot
       ref={ref}
@@ -31,7 +31,7 @@ const TableFooter = forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTM
 );
 TableFooter.displayName = 'TableFooter';
 
-const TableRow = forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
+const TableRow = forwardRef<HTMLTableRowElement, React.ComponentPropsWithoutRef<'tr'>>(
   ({ className, ...props }, ref) => (
     <tr
       ref={ref}
@@ -42,7 +42,7 @@ const TableRow = forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableR
 );
 TableRow.displayName = 'TableRow';
 
-const TableHead = forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(
+const TableHead = forwardRef<HTMLTableCellElement, React.ComponentPropsWithoutRef<'th'>>(
   ({ className, ...props }, ref) => (
     <th
       ref={ref}
@@ -56,14 +56,14 @@ const TableHead = forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTa
 );
 TableHead.displayName = 'TableHead';
 
-const TableCell = forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLTableCellElement>>(
+const TableCell = forwardRef<HTMLTableCellElement, React.ComponentPropsWithoutRef<'td'>>(
   ({ className, ...props }, ref) => (
     <td ref={ref} className={twMerge('p-4 align-middle [&:has([role=checkbox])]:pr-0', className)} {...props} />
   ),
 );
 TableCell.displayName = 'TableCell';
 
-const TableCaption = forwardRef<HTMLTableCaptionElement, React.HTMLAttributes<HTMLTableCaptionElement>>(
+const TableCaption = forwardRef<HTMLTableCaptionElement, React.ComponentPropsWithoutRef<'caption'>>(
   ({ className, ...props }, ref) => (
     <caption ref={ref} className={twMerge('mt-4 text-sm text-muted-foreground', className)} {...props} />
   ),

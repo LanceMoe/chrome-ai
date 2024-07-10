@@ -42,12 +42,12 @@ const DrawerContent = forwardRef<
 ));
 DrawerContent.displayName = 'DrawerContent';
 
-const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const DrawerHeader = ({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) => (
   <div className={twMerge('grid gap-1.5 p-4 text-center sm:text-left', className)} {...props} />
 );
 DrawerHeader.displayName = 'DrawerHeader';
 
-const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const DrawerFooter = ({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) => (
   <div className={twMerge('mt-auto flex flex-col gap-2 p-4', className)} {...props} />
 );
 DrawerFooter.displayName = 'DrawerFooter';

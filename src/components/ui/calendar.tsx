@@ -1,11 +1,14 @@
 /* eslint-disable camelcase */
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, type StyledComponent } from 'react-day-picker';
 import { twMerge } from 'tailwind-merge';
 
 import { buttonVariants } from '@/components/ui/button';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+
+const IconLeft = (props: StyledComponent) => <ChevronLeft className="h-4 w-4" {...props} />;
+const IconRight = (props: StyledComponent) => <ChevronRight className="h-4 w-4" {...props} />;
 
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
   return (
@@ -42,8 +45,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        IconLeft,
+        IconRight,
       }}
       {...props}
     />

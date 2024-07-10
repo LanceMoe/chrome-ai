@@ -66,12 +66,12 @@ const SheetContent = forwardRef<React.ElementRef<typeof SheetPrimitive.Content>,
 );
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
-const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const SheetHeader = ({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) => (
   <div className={twMerge('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
 );
 SheetHeader.displayName = 'SheetHeader';
 
-const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const SheetFooter = ({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) => (
   <div className={twMerge('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)} {...props} />
 );
 SheetFooter.displayName = 'SheetFooter';

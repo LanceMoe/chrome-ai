@@ -115,7 +115,7 @@ const CommandItem = forwardRef<
 
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
-const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+const CommandShortcut = ({ className, ...props }: React.ComponentPropsWithoutRef<'span'>) => {
   return <span className={twMerge('ml-auto text-xs tracking-widest text-muted-foreground', className)} {...props} />;
 };
 CommandShortcut.displayName = 'CommandShortcut';

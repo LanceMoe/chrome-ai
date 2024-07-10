@@ -59,7 +59,7 @@ type FormItemContextValue = {
 
 const FormItemContext = createContext<FormItemContextValue>({} as FormItemContextValue);
 
-const FormItem = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => {
+const FormItem = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(({ className, ...props }, ref) => {
   const id = useId();
 
   return (
@@ -99,7 +99,7 @@ const FormControl = forwardRef<React.ElementRef<typeof Slot>, React.ComponentPro
 );
 FormControl.displayName = 'FormControl';
 
-const FormDescription = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+const FormDescription = forwardRef<HTMLParagraphElement, React.ComponentPropsWithoutRef<'p'>>(
   ({ className, ...props }, ref) => {
     const { formDescriptionId } = useFormField();
 
@@ -110,7 +110,7 @@ const FormDescription = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
 );
 FormDescription.displayName = 'FormDescription';
 
-const FormMessage = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+const FormMessage = forwardRef<HTMLParagraphElement, React.ComponentPropsWithoutRef<'p'>>(
   ({ className, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField();
     const body = error ? String(error?.message) : children;

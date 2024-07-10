@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import { ChatInput, ChatMessages, type Message } from '@/components/ui/chat';
 import { checkAi } from '@/utils/checkAi';
 
-function App() {
+function ChatPage() {
   const [aiEngineStatus, setAiEngineStatus] = useState<AITextSessionStatus>('no');
 
   useEffect(() => {
@@ -24,35 +25,81 @@ function App() {
 
   const canUseAi = aiEngineStatus === 'readily';
 
-  const [text, setText] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  useEffect(() => {
-    if (!canUseAi) {
-      return;
-    }
-
-    (async () => {
-      if (!window.ai) {
+  const submitMessage = useCallback(
+    async (text: string) => {
+      if (!canUseAi || !window.ai) {
         return;
       }
+
+      // Add user message to the chat
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          content: text,
+          role: 'user',
+        },
+      ]);
+
+      // Create a new message with a random ID
+      const messageId = crypto.randomUUID();
+      const newMessage = {
+        id: messageId,
+        content: '',
+        role: 'assistant',
+      };
+
+      // Use the AI model to generate a response
       const session = await window.ai.createTextSession({
         temperature: 0.8, // 0-1 (default: 0.8)
         topK: 3, // 1-20 (default: 3)
       });
-      const streamingResponse = await session.promptStreaming('请扮演脱口秀演员，讲一些冷笑话。');
+      const streamingResponse = await session.promptStreaming(text);
       for await (const chunk of streamingResponse) {
-        setText(chunk);
+        newMessage.content = chunk;
+        setMessages((prev) => {
+          const index = prev.findIndex((m) => m.id === messageId);
+          if (index === -1) {
+            const newMessages = [...prev];
+            newMessages.push(newMessage);
+            return newMessages;
+          }
+          const newMessages = [...prev];
+          newMessages[index] = newMessage;
+          return newMessages;
+        });
       }
       session.destroy();
-    })();
-  }, [canUseAi]);
+    },
+    [canUseAi],
+  );
 
   return (
+    <div className="mx-auto max-w-5xl space-y-4 p-4">
+      <ChatMessages messages={messages} />
+      <ChatInput
+        multiModal
+        handleSubmit={(e, ops) => {
+          console.log('Submit', e, ops);
+          const formData = new FormData(e.currentTarget);
+          const text = formData.get('message') as string;
+          submitMessage(text);
+        }}
+      />
+    </div>
+  );
+}
+
+function App() {
+  return (
     <>
-      <h1 className="text-red-500">
+      {/* <h1 className="text-red-500">
         Can Use AI: {canUseAi ? 'Yes' : 'No'} ({aiEngineStatus})
       </h1>
-      <p>{text}</p>
+      <p>{text}</p> */}
+      <ChatPage />
     </>
   );
 }

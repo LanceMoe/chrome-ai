@@ -17,21 +17,21 @@ const alertVariants = cva(
   },
 );
 
-const Alert = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>>(
+const Alert = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'> & VariantProps<typeof alertVariants>>(
   ({ className, variant, ...props }, ref) => (
     <div ref={ref} role="alert" className={twMerge(alertVariants({ variant }), className)} {...props} />
   ),
 );
 Alert.displayName = 'Alert';
 
-const AlertTitle = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
+const AlertTitle = forwardRef<HTMLParagraphElement, React.ComponentPropsWithoutRef<'h5'>>(
   ({ className, ...props }, ref) => (
     <h5 ref={ref} className={twMerge('mb-1 font-medium leading-none tracking-tight', className)} {...props} />
   ),
 );
 AlertTitle.displayName = 'AlertTitle';
 
-const AlertDescription = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+const AlertDescription = forwardRef<HTMLParagraphElement, React.ComponentPropsWithoutRef<'div'>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={twMerge('text-sm [&_p]:leading-relaxed', className)} {...props} />
   ),

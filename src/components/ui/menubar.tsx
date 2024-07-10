@@ -181,7 +181,7 @@ const MenubarSeparator = forwardRef<
 ));
 MenubarSeparator.displayName = MenubarPrimitive.Separator.displayName;
 
-const MenubarShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+const MenubarShortcut = ({ className, ...props }: React.ComponentPropsWithoutRef<'span'>) => {
   return <span className={twMerge('ml-auto text-xs tracking-widest text-muted-foreground', className)} {...props} />;
 };
 MenubarShortcut.displayname = 'MenubarShortcut';
