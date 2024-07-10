@@ -33,6 +33,8 @@ export function ChatInput(props: Props) {
       }
     }
     setImageUrl('');
+    const messageInput = document.getElementById('message-input')! as HTMLInputElement;
+    messageInput.value = '';
   };
 
   const onRemovePreviewImage = () => setImageUrl('');
@@ -61,20 +63,22 @@ export function ChatInput(props: Props) {
   };
 
   return (
-    <form onSubmit={onSubmit} className={twMerge('rounded-xl bg-white p-4 shadow-xl space-y-4', className)}>
+    <form onSubmit={onSubmit} className={twMerge('rounded-xl bg-white', className)}>
       {!!imageUrl && <UploadImagePreview url={imageUrl} onRemove={onRemovePreviewImage} />}
       <div className="flex w-full items-start justify-between gap-4 ">
         <Input
           autoFocus
+          id="message-input"
           name="message"
-          placeholder="Type a message"
+          placeholder="Input message..."
           className="flex-1"
           value={inputValue}
           onChange={handleInputChange}
+          required
         />
-        <FileUploader onFileUpload={handleUploadFile} onFileError={onFileError} />
+        {!!multiModal && <FileUploader onFileUpload={handleUploadFile} onFileError={onFileError} />}
         <Button type="submit" disabled={isLoading}>
-          Send message
+          Send
         </Button>
       </div>
     </form>

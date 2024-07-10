@@ -16,9 +16,10 @@ export function ChatMessages(props: Props) {
   const lastMessage = messages[messageLength - 1];
 
   const scrollToBottom = () => {
-    if (scrollableChatContainerRef.current) {
-      scrollableChatContainerRef.current.scrollTop = scrollableChatContainerRef.current.scrollHeight;
+    if (!scrollableChatContainerRef.current) {
+      return;
     }
+    scrollableChatContainerRef.current.scrollTop = scrollableChatContainerRef.current.scrollHeight;
   };
 
   const isLastMessageFromAssistant = messageLength > 0 && lastMessage?.role !== 'user';
@@ -30,8 +31,8 @@ export function ChatMessages(props: Props) {
   }, [messageLength, lastMessage]);
 
   return (
-    <div className={twMerge('w-full rounded-xl bg-white p-4 shadow-xl pb-0', className)}>
-      <div className="flex h-[50vh] flex-col gap-5 divide-y overflow-y-auto pb-4" ref={scrollableChatContainerRef}>
+    <div className={twMerge('w-full rounded-xl bg-white p-4 border pb-0 h-full overflow-auto', className)}>
+      <div className="flex flex-col gap-5 divide-y overflow-y-auto pb-4" ref={scrollableChatContainerRef}>
         {messages.map((m) => (
           <ChatMessage key={m.id} {...m} />
         ))}
