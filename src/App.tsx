@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ChatInput, ChatMessages, type Message } from '@/components/ui/chat';
 import { checkAi } from '@/utils/checkAi';
-import { capitalize, removeStartWord } from '@/utils/words';
 
 function ChatPage() {
   const [aiEngineStatus, setAiEngineStatus] = useState<AITextSessionStatus>('no');
   const [isLoading, setIsLoading] = useState(false);
+  const needStop = useRef(false);
 
   useEffect(() => {
     checkAi()
@@ -27,16 +28,22 @@ function ChatPage() {
 
   const canUseAi = aiEngineStatus === 'readily';
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { data: session } = useQuery({
+    queryKey: ['ai'],
+    queryFn: () =>
+      window.ai?.createTextSession({
+        temperature: 0.8, // 0-1 (default: 0.8)
+        topK: 3, // 1-20 (default: 3)
+      }),
+    enabled: !!window.ai && canUseAi,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
 
-  const generatePrompts = (currentMessages: Message[]) => {
-    const prompts = currentMessages.map((m) => `[${capitalize(m.role)}]\n${m.content}`).join('\n');
-    return prompts;
-  };
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const submitMessage = useCallback(
     async (text: string) => {
-      if (!canUseAi || !window.ai) {
+      if (!canUseAi || !window.ai || !session) {
         return;
       }
 
@@ -46,7 +53,7 @@ function ChatPage() {
         content: text,
         role: 'user',
       };
-      const prompt = generatePrompts([...messages, userMessage]) + '\n[Assistant]\n';
+
       setMessages((prev) => [...prev, userMessage]);
 
       // Create a new message with a random ID
@@ -61,15 +68,13 @@ function ChatPage() {
       try {
         setIsLoading(true);
 
-        const session = await window.ai.createTextSession({
-          temperature: 0.8, // 0-1 (default: 0.8)
-          topK: 3, // 1-20 (default: 3)
-        });
-
-        console.log(prompt);
-        const streamingResponse = await session.promptStreaming(prompt);
+        const streamingResponse = await session.promptStreaming(text);
         for await (const chunk of streamingResponse) {
-          newMessage.content = removeStartWord(chunk, '[Assistant]').trim();
+          if (needStop.current) {
+            needStop.current = false;
+            break;
+          }
+          newMessage.content = chunk;
           setMessages((prev) => {
             const index = prev.findIndex((m) => m.id === messageId);
             if (index === -1) {
@@ -82,17 +87,29 @@ function ChatPage() {
             return newMessages;
           });
         }
-        session.destroy();
       } finally {
         setIsLoading(false);
       }
     },
-    [canUseAi, messages],
+    [canUseAi, session],
   );
 
   return (
     <div className="mx-auto max-w-5xl p-4 h-screen flex flex-col max-h-screen gap-4">
-      <ChatMessages messages={messages} />
+      <ChatMessages
+        isLoading={!canUseAi || isLoading}
+        messages={messages}
+        reload={() => {
+          const text = messages.at(-2)?.content;
+          if (text) {
+            setMessages((prev) => prev.slice(0, -2));
+            submitMessage(text);
+          }
+        }}
+        stop={() => {
+          needStop.current = true;
+        }}
+      />
       <ChatInput
         isLoading={!canUseAi || isLoading}
         handleSubmit={(e, ops) => {
@@ -107,15 +124,7 @@ function ChatPage() {
 }
 
 function App() {
-  return (
-    <>
-      {/* <h1 className="text-red-500">
-        Can Use AI: {canUseAi ? 'Yes' : 'No'} ({aiEngineStatus})
-      </h1>
-      <p>{text}</p> */}
-      <ChatPage />
-    </>
-  );
+  return <ChatPage />;
 }
 
 export default App;

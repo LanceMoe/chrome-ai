@@ -1,3 +1,4 @@
+import { MacScrollbar } from 'mac-scrollbar';
 import { useEffect, useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -13,33 +14,37 @@ export function ChatMessages(props: Props) {
   const { messages, isLoading, reload, stop, className } = props;
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
   const messageLength = messages.length;
-  const lastMessage = messages[messageLength - 1];
+  const lastMessage = messages.at(-1);
 
   const scrollToBottom = () => {
-    if (!scrollableChatContainerRef.current) {
+    const container = scrollableChatContainerRef.current;
+    if (!container) {
       return;
     }
-    scrollableChatContainerRef.current.scrollTop = scrollableChatContainerRef.current.scrollHeight;
+    container.scrollTo(0, container.scrollHeight);
   };
 
   const isLastMessageFromAssistant = messageLength > 0 && lastMessage?.role !== 'user';
-  const showReload = reload && !isLoading && isLastMessageFromAssistant;
-  const showStop = stop && !!isLoading;
+  const showReload = !!reload && !isLoading && isLastMessageFromAssistant;
+  const showStop = !!stop && !!isLoading;
 
   useEffect(() => {
     scrollToBottom();
-  }, [messageLength, lastMessage]);
+  }, [messageLength, lastMessage?.content.length]);
 
   return (
-    <div className={twMerge('w-full rounded-xl bg-white p-4 border pb-0 h-full overflow-auto', className)}>
-      <div className="flex flex-col gap-5 divide-y overflow-y-auto pb-4" ref={scrollableChatContainerRef}>
-        {messages.map((m) => (
-          <ChatMessage key={m.id} {...m} />
-        ))}
+    <MacScrollbar
+      skin="light"
+      ref={scrollableChatContainerRef}
+      className={twMerge('w-full rounded-xl bg-white p-4 border pb-0 h-full overflow-auto scroll-smooth', className)}
+    >
+      <div className="flex flex-col gap-5">
+        {!!messages?.length && messages.map((m) => <ChatMessage key={m.id} {...m} />)}
       </div>
-      <div className="flex justify-end py-4">
+
+      <div className="flex justify-start py-4 pl-12">
         <ChatActions reload={reload} stop={stop} showReload={showReload} showStop={showStop} />
       </div>
-    </div>
+    </MacScrollbar>
   );
 }

@@ -1,6 +1,7 @@
 import { CheckIcon, CopyIcon } from 'lucide-react';
 
-import { useCopyToClipboard } from '../../../hooks/use-copy-to-clipboard';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+
 import { Button } from '../button';
 import { Message } from './chat';
 import { ChatAvatar } from './chat-avatar';

@@ -9,15 +9,16 @@ type Props = Pick<ChatHandler, 'stop' | 'reload'> & {
 };
 
 export function ChatActions(props: Props) {
+  const { showReload, showStop } = props;
   return (
     <div className="space-x-4">
-      {props.showStop && (
+      {!!showStop && (
         <Button variant="outline" size="sm" onClick={props.stop}>
           <PauseCircleIcon className="mr-2 h-4 w-4" />
           Stop generating
         </Button>
       )}
-      {props.showReload && (
+      {!!showReload && (
         <Button variant="outline" size="sm" onClick={props.reload}>
           <RefreshCwIcon className="mr-2 h-4 w-4" />
           Regenerate
