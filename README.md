@@ -1,30 +1,24 @@
-# React + TypeScript + Vite
+# Chrome AI Test Page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+https://chrome-ai.lance.moe/
 
-Currently, two official plugins are available:
+This is a test page for the built-in AI model in Chrome. It is a simple page that allows you to test the model's performance on your device.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Using React, TypeScript, Tailwind CSS, shadcn-ui.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Prerequisites
 
-- Configure the top-level `parserOptions` property like this:
+- Latest version of Google Chrome (127+).
+- **Make sure you have more than 22GB of free space on your system.**
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-};
-```
+### How to Set Up Built-in Gemini Nano in Chrome
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. **Install Chrome Canary**: Ensure you have version 127. [Download Chrome Canary](https://google.com/chrome/canary/).
+2. **Enable Prompt API**: Open `chrome://flags/#prompt-api-for-gemini-nano`, set it to "Enabled".
+3. **Enable Optimization Guide**: Open `chrome://flags/#optimization-guide-on-device-model`, set it to "Enabled BypassPerfRequirement". Restart the browser.
+4. **Login to Google**: Make sure you are logged in to Chrome. For now, Incognito and Guest mode are not supported.
+5. **Download Model**: Go to `chrome://components/`, and open DevTools(F12), run `await window.ai.createTextSession()` in the console. After a while, you could find "Optimization Guide On Device Model" in the list, ensure it’s fully downloaded. If the version is "0.0.0.0", click "Check for update".
+6. **Troubleshoot**: If the "Optimization Guide On Device Model" is not displayed, disable the settings in steps 2 and 3, restart your browser and re-enable it.
+7. **Verify Setup**: Open a webpage, press F12, and check `window.ai` in the console.
